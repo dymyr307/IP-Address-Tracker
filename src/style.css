@@ -42,7 +42,7 @@
   outline: none;
   padding: 1.5rem 2rem;
   border-radius: 10px 0 0 10px;
-  cursor: pointer;
+  cursor: auto;
 }
 .search-bar__btn {
   background-color: black;
