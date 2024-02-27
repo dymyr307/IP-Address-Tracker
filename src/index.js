@@ -1,6 +1,7 @@
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { validateIp } from './helpers';
+import icon from '../images/icon-location.svg';
 
 const ipInput = document.querySelector('.search-bar__input');
 const btn = document.querySelector('button');
@@ -14,7 +15,11 @@ btn.addEventListener('click', getData);
 ipInput.addEventListener('keydown', handleKay);
 
 //* leafletjs
-
+const markerIcon = L.icon({
+  iconUrl: icon,
+  iconSize: [20, 30],
+  // iconAnchor: [22, 94],
+});
 const mapArea = document.querySelector('.map');
 const map = L.map(mapArea, {
   center: [51.505, -0.09],
@@ -24,9 +29,9 @@ const map = L.map(mapArea, {
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
   maxZoom: 19,
   attribution:
-    '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    '&copy; <a href="https://github.com/dymyr307/IP-Address-Tracker">V. Dema</a>',
 }).addTo(map);
-
+L.marker([51.505, -0.09], { icon: markerIcon }).addTo(map);
 function getData() {
   if (validateIp(ipInput.value)) {
     fetch(`
