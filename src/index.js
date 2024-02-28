@@ -1,6 +1,6 @@
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { validateIp } from './helpers';
+import { addTileLayer, validateIp } from './helpers';
 import icon from '../images/icon-location.svg';
 
 const ipInput = document.querySelector('.search-bar__input');
@@ -26,11 +26,7 @@ const map = L.map(mapArea, {
   zoom: 13,
 });
 
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 19,
-  attribution:
-    '&copy; <a href="https://github.com/dymyr307/IP-Address-Tracker">V. Dema</a>',
-}).addTo(map);
+addTileLayer(map);
 L.marker([51.505, -0.09], { icon: markerIcon }).addTo(map);
 function getData() {
   if (validateIp(ipInput.value)) {
