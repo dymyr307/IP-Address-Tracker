@@ -1,7 +1,8 @@
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-import { addTileLayer, validateIp } from './helpers';
+import { addOffset, addTileLayer, validateIp } from './helpers';
 import icon from '../images/icon-location.svg';
+import { getAdress } from './helpers/get-adress';
 
 const ipInput = document.querySelector('.search-bar__input');
 const btn = document.querySelector('button');
@@ -18,16 +19,19 @@ ipInput.addEventListener('keydown', handleKay);
 const markerIcon = L.icon({
   iconUrl: icon,
   iconSize: [20, 30],
-  // iconAnchor: [22, 94],
 });
+
 const mapArea = document.querySelector('.map');
 const map = L.map(mapArea, {
   center: [51.505, -0.09],
   zoom: 13,
+  zoomControl: false,
 });
 
 addTileLayer(map);
-L.marker([51.505, -0.09], { icon: markerIcon }).addTo(map);
+
+L.marker([51.505, 0.09], { icon: markerIcon }).addTo(map);
+
 function getData() {
   if (validateIp(ipInput.value)) {
     fetch(`
@@ -35,6 +39,7 @@ function getData() {
       .then((response) => response.json())
       .then((data) => setInfo(data));
   }
+  console.log(data);
 }
 
 function handleKay(e) {
@@ -44,12 +49,24 @@ function handleKay(e) {
 }
 
 function setInfo(mapData) {
-  console.log(mapData);
+  console.log(mapData.location);
+  const { lat, lng, country, region, timezone } = mapData.location;
+
   ipInfo.innerText = mapData.ip;
-  locationInfo.innerText =
-    mapData.location.country + '' + mapData.location.region;
-  timezoneInfo.innerText = mapData.location.timezone;
+  locationInfo.innerText = country + '' + region;
+  timezoneInfo.innerText = timezone;
   ispInfo.innerText = mapData.isp;
+
+  map.setView([lat, lng]);
+  L.marker([lat, lng], { icon: markerIcon }).addTo(map);
+
+  if (matchMedia('(max-width: 1023px)').matches) {
+    addOffset(map);
+  }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  getAdress('102.22.22.1').then(setInfo);
+});
 
 //* at_igcHGhCgTceF5LAHzPSITQrACAenf
